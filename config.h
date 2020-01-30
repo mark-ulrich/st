@@ -120,6 +120,8 @@ unsigned int defaultfg = 7;
 unsigned int defaultbg = 0;
 static unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
+float alpha = 0.93f;
+float alphaUnfocussed = 0.85f;
 
 /*
  * Default shape of cursor
