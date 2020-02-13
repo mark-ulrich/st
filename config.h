@@ -151,7 +151,7 @@ static unsigned int defaultunderline = 7;
 
 static unsigned int defaultrcs = 257;
 
-float alpha = 0.93f;
+float alpha = 0.95f;
 float alphaUnfocussed = 0.85f;
 
 /*
