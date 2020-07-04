@@ -199,10 +199,11 @@ static MouseShortcut mshortcuts[] = {
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY        Mod1Mask
-#define AltMask       Mod1Mask
-#define AltShiftMask  (AltMask|ShiftMask)
-#define TERMMOD       (ControlMask|ShiftMask)
+#define MODKEY         Mod1Mask
+#define AltMask        Mod1Mask
+#define AltShiftMask   (AltMask|ShiftMask)
+#define TERMMOD        (ControlMask|ShiftMask)
+#define CtrlShiftMask  (ControlMask|ShiftMask)
 
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function        argument */
@@ -210,11 +211,14 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+
+        /* Copy/paste */
+	{ CtrlShiftMask,        XK_C,           clipcopy,       {.i =  0} },
+	{ CtrlShiftMask,        XK_V,           clippaste,      {.i =  0} },
+	{ CtrlShiftMask,        XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+
+	{ CtrlShiftMask,        XK_Num_Lock,    numlock,        {.i =  0} },
 
         /* Zooming */
 	{ AltShiftMask,         XK_plus,        zoom,           {.f = +1} },
