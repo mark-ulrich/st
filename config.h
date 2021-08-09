@@ -5,8 +5,12 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
+//static char *font =
+//    "TerminessTTFNerdFontMono:pixelsize=15:antialias=true:autohint=true";
 static char *font =
-    "TerminessTTFNerdFontMono:pixelsize=15:antialias=true:autohint=true";
+    "Terminus (TTF):pixelsize=15:antialias=true:autohint=true";
+//static char *font =
+//    "Fira Code:pixelsize=14:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
