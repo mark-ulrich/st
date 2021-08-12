@@ -5,18 +5,13 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-//static char *font =
-//    "TerminessTTFNerdFontMono:pixelsize=15:antialias=true:autohint=true";
-static char *font =
-    "Terminus (TTF):pixelsize=15:antialias=true:autohint=true";
-//static char *font =
-//    "Fira Code:pixelsize=14:antialias=true:autohint=true";
-static int borderpx = 2;
+static char *font = "Fira Code:pixelsize=14:antialias=true:autohint=true";
+static int borderpx = 10;
 
 /*
  * What program is execed by st depends of these precedence rules:
  * 1: program passed with -e
- * 2: utmp option
+ * 2: scroll and/or utmp
  * 3: SHELL environment variable
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
@@ -47,10 +42,6 @@ static unsigned int tripleclicktimeout = 600;
 
 /* alt screens */
 int allowaltscreen = 1;
-
-/* frames per second st should at maximum draw to the screen */
-static unsigned int xfps = 120;
-static unsigned int actionfps = 30;
 
 /* allow certain non-interactive (insecure) window operations such as:
    setting the clipboard text */
@@ -102,55 +93,16 @@ char *termname = "st-256color";
  */
 unsigned int tabspaces = 4;
 
-/* Terminal colors (16 first used in escape sequence) */
-static const char *colorname[] = {
+/* bg opacity */
+float alpha = 0.9f;           //< alpha value used when the window is focused.
+float alphaUnfocussed = 0.8f; //< alpha value used when the focus is lost
 
-    /* 8 normal colors */
-    [0] = "#0a0f14", /* black   */
-    [1] = "#c33027", /* red     */
-    [2] = "#26a98b", /* green   */
-    [3] = "#edb54b", /* yellow  */
-    [4] = "#195465", /* blue    */
-    [5] = "#4e5165", /* magenta */
-    [6] = "#33859d", /* cyan    */
-    [7] = "#98d1ce", /* white   */
-
-    /* 8 bright colors */
-    [8] = "#88735c",  /* black   */
-    [9] = "#d26939",  /* red     */
-    [10] = "#275672", /* green   */
-    [11] = "#377689", /* yellow  */
-    [12] = "#e7e7e7", /* blue    */
-    [13] = "#888ba5", /* magenta */
-    [14] = "#599caa", /* cyan    */
-    [15] = "#d3ebe9", /* white   */
-
-    /* special colors */
-    [256] = "#0a0f14", /* background */
-    [257] = "#98d1ce", /* foreground */
-
-};
-
-/*
- * Default colors (colorname index)
- * foreground, background, cursor
- */
-unsigned int defaultfg = 257;
-unsigned int defaultbg = 256;
-static unsigned int defaultcs = 257;
-
-/*
- * Colors used, when the specific fg == defaultfg. So in reverse mode this
- * will reverse too. Another logic would only make the simple feature too
- * complex.
- */
-static unsigned int defaultitalic = 7;
-static unsigned int defaultunderline = 7;
-
-static unsigned int defaultrcs = 257;
-
-float alpha = 0.95f;
-float alphaUnfocussed = 0.85f;
+/* #include "colorschemes/twilight_dark.h" */
+/* #include "colorschemes/tomorrow_dark.h" */
+/* #include "colorschemes/gotham.h" */
+/* #include "colorschemes/gotham_modified.h" */
+/* #include "colorschemes/kasugano.h" */
+#include "colorschemes/navy_and_ivory.h"
 
 /*
  * Default shape of cursor
@@ -165,8 +117,8 @@ static unsigned int cursorshape = 2;
  * Default columns and rows numbers
  */
 
-static unsigned int cols = 90;
-static unsigned int rows = 25;
+static unsigned int cols = 80;
+static unsigned int rows = 24;
 
 /*
  * Default colour and shape of the mouse cursor
@@ -192,32 +144,21 @@ static uint forcemousemod = ShiftMask;
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
-const unsigned int mousescrollincrement = 10;
+const unsigned int mousescrollincrement = 1;
 static MouseShortcut mshortcuts[] = {
     /* mask                 button   function        argument       release */
-    {XK_ANY_MOD,
-     Button4,
-     kscrollup,
-     {.i = mousescrollincrement},
-     0,
-     /* !alt */ -1},
-    {XK_ANY_MOD,
-     Button5,
-     kscrolldown,
-     {.i = mousescrollincrement},
-     0,
-     /* !alt */ -1},
+    {XK_ANY_MOD, Button4, kscrollup, {.i = 1}, 0, /* !alt */ -1},
+    {XK_ANY_MOD, Button5, kscrolldown, {.i = 1}, 0, /* !alt */ -1},
     {XK_ANY_MOD, Button2, selpaste, {.i = 0}, 1},
+    {ShiftMask, Button4, ttysend, {.s = "\033[5;2~"}},
     {XK_ANY_MOD, Button4, ttysend, {.s = "\031"}},
+    {ShiftMask, Button5, ttysend, {.s = "\033[6;2~"}},
     {XK_ANY_MOD, Button5, ttysend, {.s = "\005"}},
 };
 
 /* Internal keyboard shortcuts. */
 #define MODKEY Mod1Mask
-#define AltMask Mod1Mask
-#define AltShiftMask (AltMask | ShiftMask)
 #define TERMMOD (ControlMask | ShiftMask)
-#define CtrlShiftMask (ControlMask | ShiftMask)
 
 static Shortcut shortcuts[] = {
     /* mask                 keysym          function        argument */
@@ -225,23 +166,16 @@ static Shortcut shortcuts[] = {
     {ControlMask, XK_Print, toggleprinter, {.i = 0}},
     {ShiftMask, XK_Print, printscreen, {.i = 0}},
     {XK_ANY_MOD, XK_Print, printsel, {.i = 0}},
-
-    /* Copy/paste */
-    {CtrlShiftMask, XK_C, clipcopy, {.i = 0}},
-    {CtrlShiftMask, XK_V, clippaste, {.i = 0}},
-    {CtrlShiftMask, XK_Y, selpaste, {.i = 0}},
+    {TERMMOD, XK_Prior, zoom, {.f = +1}},
+    {TERMMOD, XK_Next, zoom, {.f = -1}},
+    {TERMMOD, XK_Home, zoomreset, {.f = 0}},
+    {TERMMOD, XK_C, clipcopy, {.i = 0}},
+    {TERMMOD, XK_V, clippaste, {.i = 0}},
+    {TERMMOD, XK_Y, selpaste, {.i = 0}},
     {ShiftMask, XK_Insert, selpaste, {.i = 0}},
-
-    {CtrlShiftMask, XK_Num_Lock, numlock, {.i = 0}},
-
-    /* Zooming */
-    {AltShiftMask, XK_plus, zoom, {.f = +1}},
-    {AltMask, XK_minus, zoom, {.f = -1}},
-    {AltMask, XK_equal, zoomreset, {.f = 0}},
-
-    /* Scrolling */
-    {AltMask, XK_n, kscrolldown, {.i = -1}},
-    {AltMask, XK_p, kscrollup, {.i = -1}},
+    {TERMMOD, XK_Num_Lock, numlock, {.i = 0}},
+    {ShiftMask, XK_Page_Up, kscrollup, {.i = -1}},
+    {ShiftMask, XK_Page_Down, kscrolldown, {.i = -1}},
 };
 
 /*
