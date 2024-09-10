@@ -98,12 +98,12 @@ unsigned int tabspaces = 4;
 float alpha = 0.9f;           //< alpha value used when the window is focused.
 float alphaUnfocussed = 0.8f; //< alpha value used when the focus is lost
 
-/* #include "colorschemes/twilight_dark.h" */
-/* #include "colorschemes/tomorrow_dark.h" */
-/* #include "colorschemes/gotham.h" */
-/* #include "colorschemes/gotham_modified.h" */
-#include "colorschemes/kasugano.h"
-/* #include "colorschemes/navy_and_ivory.h" */
+// #include "colorschemes/twilight_dark.h"
+// #include "colorschemes/tomorrow_dark.h"
+// #include "colorschemes/gotham.h"
+#include "colorschemes/gotham_modified.h"
+// #include "colorschemes/kasugano.h"
+// #include "colorschemes/navy_and_ivory.h"
 
 /*
  * Default shape of cursor
